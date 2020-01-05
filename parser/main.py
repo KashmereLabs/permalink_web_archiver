@@ -24,8 +24,4 @@ def fetch_data():
   
   article.nlp()
   
-  print(article.summary)
-  
-  print("***")
-  
-  return "UIUI"
+  return {"summary": article.summary, "title": article.title, "image": article.top_image, "keywords": article.keywords, "full_text": article.text}
