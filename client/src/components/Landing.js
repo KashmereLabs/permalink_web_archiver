@@ -18,7 +18,23 @@ export default class Landing extends Component {
     const self = this;
 
     axios.post(`${APP_SERVER_URI}/link/extract`, payload).then(function(dataResponse) {
-      self.setState({ "linkPreview": dataResponse.data.data, "transactionStatus": "init", "transactionId": "" });
+      let previewData = dataResponse.data.data;
+      let sentiment_text = "";
+      let setimentScore = Number(previewData.sentiment);
+      if (setimentScore >= 0.5) {
+        sentiment_text = <span>&#9786; very positive</span>;
+      }
+      if (setimentScore >= 0 && setimentScore <= 0.5) {
+        sentiment_text = <span>&#9786; slightly positive</span>;
+      }
+      if (setimentScore < 0 && setimentScore >= -0.5) {
+        sentiment_text = <span>&#9785; slightly negative</span>;
+      }
+      if (setimentScore < -0.5) {
+        sentiment_text = <span>&#9785; very negative</span>;
+      }
+
+      self.setState({ "linkPreview": Object.assign({}, previewData, { sentiment_text: sentiment_text }), "transactionStatus": "init", "transactionId": "" });
     });
   }
 
@@ -46,9 +62,7 @@ export default class Landing extends Component {
     const { transactionId } = this.state;
     this.timer = setInterval(function() {
       axios.get(`${APP_SERVER_URI}/storage/status?id=${transactionId}`).then(function(transactionStatusResponse) {
-        console.log(transactionStatusResponse.data.confirmed);
         const confirmStatus = transactionStatusResponse.data.confirmed;
-        console.log(confirmStatus);
         if (confirmStatus !== null) {
           self.stopTimer();
         }
@@ -57,7 +71,6 @@ export default class Landing extends Component {
   }
 
   stopTimer = () => {
-    console.log("Stopping timer");
     clearInterval(this.timer);
     this.setState({ transactionStatus: "confirmed" });
 
@@ -144,9 +157,15 @@ class LinkDataPreview extends Component {
     function createMarkup() {
       return { __html: previewData.full_text };
     }
+
     return (
       <div>
         <h3>{previewData.title}</h3>
+        <div className="article-subheading-container">
+          <div className="article-subheading-label">Authors</div><div className="article-subheading-text"> {previewData.authors}</div> 
+          <div className="article-subheading-label">Published on </div><div className="article-subheading-text">{previewData.publish_date}</div> 
+          <div className="article-subheading-label">Sentiment</div><div className="article-subheading-text">{previewData.sentiment_text}</div> 
+        </div>
         <Row>
           <Col lg={6}><img src={previewData.image} className="preview-image-class"/></Col>
           <Col lg={6}>
@@ -154,8 +173,6 @@ class LinkDataPreview extends Component {
             <div>{previewData.summary}</div>
             <div className="h4">Tags</div>
             {keywordList}
-            <h4>Article Sentiment</h4>
-            
           </Col>
         </Row>
         <Row>

@@ -18,8 +18,11 @@ router.post('/extract', function(req, res) {
 
 
   axios.get(`${PARSER_SERVER_URI}/fetch?url=${url}`).then(function(dataResponse) {
-
-    res.send({ "message": "success", "data": dataResponse.data });
+    
+    let responsePayload = dataResponse.data;
+    responsePayload.original_link = url;
+    
+    res.send({ "message": "success", "data": responsePayload });
   });
 
 });

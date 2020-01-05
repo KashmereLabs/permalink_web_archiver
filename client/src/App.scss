@@ -55,5 +55,21 @@
     padding-top: 10px;
   }
 
-  
+  .article-subheading-label {
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-block;
+    margin-right: 4px;
+    font-stretch: condensed;
+  }
+  .article-subheading-text {
+    font-weight: 400;
+    display: inline-block;
+    font-size: 14px;
+    margin-right: 12px;
+    
+  }
+  .article-subheading-container {
+    margin-bottom: 12px;
+  }
 }
