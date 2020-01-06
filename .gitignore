@@ -5,3 +5,5 @@ parser/venv
 parser/__pycache__
 server/wallet.json
 client/.env.local
+client/.env
+server/.env

@@ -68,8 +68,8 @@ router.post('/archive', function(req, res) {
         });
       });
     });
-  }).catch(function(err){
-    res.send({"message": "failure", "error": err});
+  }).catch(function(err) {
+    res.send({ "message": "failure", "error": err });
   })
 
 });

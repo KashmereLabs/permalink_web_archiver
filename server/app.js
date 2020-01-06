@@ -9,6 +9,7 @@ var linkRouter = require('./routes/link');
 var storageRouter = require('./routes/storage');
 var app = express();
 app.use(cors())
+require('dotenv').config();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
