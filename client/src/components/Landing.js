@@ -217,7 +217,7 @@ class RecentArchives extends Component {
 class ArchiveCard extends Component {
   render() {
     const { data } = this.props;
-    console.log(data.keywords);
+    console.log(data);
     let keywordList = [];
     if (data.keywords) {
       keywordList = JSON.parse(data.keywords);
