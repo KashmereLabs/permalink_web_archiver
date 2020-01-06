@@ -2,5 +2,5 @@ client/node_modules
 client/build
 server/node_modules
 parser/venv
-parser/_pycache_
+parser/__pycache__
 server/wallet.json

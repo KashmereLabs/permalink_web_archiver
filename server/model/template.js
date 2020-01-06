@@ -2,7 +2,8 @@ module.exports = {
 
 
   getPageHTML: function(pageData) {
-    console.log(pageData.title);
+
+    let sentimentText = pageData.sentiment_text.props.children;
 
     return `<html>
     <head>
@@ -12,12 +13,19 @@ module.exports = {
     <body class="page-outer-container">
       <div class="page-text-container">
         <h3>${pageData.title}</h3>
+        <div class="article-subheading-container">
+          <div class="article-subheading-label">Authors</div><div class="article-subheading-text">${pageData.authors}</div> 
+          <div class="article-subheading-label">Published on </div><div class="article-subheading-text">${pageData.publish_date}</div> 
+          <div class="article-subheading-label">Sentiment</div><div class="article-subheading-text"><span>${sentimentText}</span></div> 
+        </div>
         <div class="page-main-image-container">
           <img src="${pageData.image}" class="page-main-image"/>
         </div>
         <div class="page-summary-container">
+          <div class="h4">Summary</div>
           ${decodeURI(pageData.summary)}
-          <div>
+        <div>
+          <div class="h4">Keywords</div>
             ${pageTags(pageData.keywords)}
           </div>
         </div>
@@ -34,6 +42,7 @@ module.exports = {
 function appMetaTags(pageData) {
   return `
 <title>${pageData.title}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta property="og:title" content="${pageData.title}" />
 <meta property="og:type" content="article" />
 <meta property="og:image" content="${pageData.image}" />  
@@ -87,5 +96,36 @@ function appStyles() {
         color: #212529;
     background-color: #f8f9fa;
     }
+  .article-subheading-label {
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-block;
+    margin-right: 4px;
+    font-stretch: condensed;
+  }
+  .article-subheading-text {
+    font-weight: 400;
+    display: inline-block;
+    font-size: 14px;
+    margin-right: 12px;
+    
+  }
+  .article-subheading-container {
+    margin-bottom: 12px;
+  }
+  .h3 {
+    font-size: 1.75rem;
+    font-size: 1.17em;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;        
+  }
+  .h4 {
+    font-size: 1.5rem;
+    margin-bottom: .5rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
   </style>`
 }

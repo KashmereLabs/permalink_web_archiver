@@ -23,11 +23,9 @@ router.post('/archive', function(req, res) {
 
   getBase64(linkData.image).then(function(imageDataResponse) {
 
-
     let articleImageStoreTransaction = arweave.createTransaction({
       data: imageDataResponse
     }, walletJWK);
-
 
     articleImageStoreTransaction.then(function(imageDataResponse) {
       imageDataResponse.addTag('Content-Type', 'image/jpeg');
@@ -47,10 +45,10 @@ router.post('/archive', function(req, res) {
 
           articleStoreTransaction.then(function(archiveResponse) {
             archiveResponse.addTag('Content-Type', 'text/html');
-            archiveResponse.addTag('origina-link', linkData.original_link);
+            archiveResponse.addTag('original-link', linkData.original_link);
             archiveResponse.addTag('article_tags', JSON.stringify(linkData.keywords))
             archiveResponse.addTag('uploaded_on', uploaded_on)
-
+            archiveResponse.addTag('sentiment_score', linkData.sentiment)
             arweave.transactions.sign(archiveResponse, walletJWK).then(function(signedTransactionResponse) {
 
               arweave.transactions.post(archiveResponse).then(function(postResponse) {
@@ -60,8 +58,6 @@ router.post('/archive', function(req, res) {
             });
           });
         });
-
-
       });
     });
   })
@@ -72,7 +68,6 @@ router.get('/status', function(req, res) {
   const { id } = req.query;
 
   arweave.transactions.getStatus(id).then(status => {
-    console.log(status);
     res.send(status);
   });
 });
@@ -83,7 +78,7 @@ function getBase64(url) {
     .get(url, {
       responseType: 'arraybuffer'
     })
-    .then(response => Buffer.from(response.data, 'binary').toString('base64'))
+    .then(response => Buffer.from(response.data, 'binary'))
 }
 
 module.exports = router;

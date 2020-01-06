@@ -5,6 +5,28 @@ Permalink web archiver strips down the noise from a webpage and generates a read
 Webpages are filled with adware, noise and unnecessary parts. This app generates a short summary and detailed text, representation and stores it permanently to the Arweave 
 permaweb. 
 
+## Features
+### Article Archiving
+Companies come and go, web-servers shut down, content gets deleted all the time.
+Once an article is archived it will be preserved in the permaweb forever.
+
+### Article cleaning
+
+
+### Article tagging
+Automatic tag extraction for better organization, management and querying
+
+### Article summarization
+Automatically generated article summary for 
+
+### Article Sentiment
+Article sentiment polarity scoring.
+
+### Rich Social Media cards
+Use of open graph tags for creating rich social media previews for all archived content. 
+
+### Permaweb tags 
+Tags added to permaweb include date published, author, keywords, original link for easy retrieval and organization of the collection of articles in permaweb.
 
 ## How it works
 
