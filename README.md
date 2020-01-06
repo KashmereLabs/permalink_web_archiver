@@ -52,6 +52,12 @@ Most articles which are paywalled when viewed online can be accessed in full tex
 ## How it works
 ![Image to demonstrate the app workflow](/resources/workflow.png)
 
+## Screenshots
+![Image to demonstrate the app home view](/resources/app_home_view.png)
+
+![Image to demonstrate the app mobile view](/resources/app_mobile_views.png)
+
+
 ## Technical stack
 
 The technical stack contains three parts-
@@ -78,7 +84,10 @@ Download the arweave wallet json and place it in project root in a file called *
 
 Note: The wallet json contains your private keys so do not expose it to the world or put it in any of your repos.
 
-Client runs a ReactJS stack, in order to run the client project.
+Client runs a ReactJS stack, in order to run the client project. Default port is port 3000
+- Create/Modify the env file with the host of your application server
+
+- The env file assumes that the local application server is running on port 8000
 
 ```
  cd client
@@ -86,9 +95,11 @@ Client runs a ReactJS stack, in order to run the client project.
  npm start
 ```
 
-The env file assumes that the local server is running on port 8000
+The server is an Express NodeJS project
 
-The server is a NodeJS project
+- Place the wallet.json file in the root of this project
+
+- Create/Modify the env file with the URL of your parser server
 
 ```
 cd server
@@ -96,9 +107,13 @@ sudo npm install
 npm start
 ```
 
-The parser contains libraries and methods for parsing and analyzing the webpage data
+The parser contains libraries and methods for parsing and analyzing the webpage data.
+
 Please install python3 on your system. Newspaper3k requires python3.
-It is recommnded to run the parser in a virtualenv environment.
+
+- It is recommnded to run the parser in a virtualenv environment.
+
+- The default port for the flask server is port 5000
 
 ```
 sudo pip3 install -r requirements.txt
