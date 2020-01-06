@@ -1,23 +1,38 @@
 # Permalink Web Archiver
-Permalink web archiver strips down the noise from a webpage and generates a readable version of an article and archives it to Arweave permaweb.
+Permalink web archiver removes the noise from a webpage and strips down the webpage to its core generating an easily readable version of an article and archives it to Arweave permaweb.
+
+It also bypasses any paywalls on a publisher website while generating the readable archive.
+
+This project is meant to generate readable content artifacts and enable web content to be preserved over an extended period of time. 
+
+Please use it judiciously and do not upload copyrighted content from the web.
 
 ## Motivation
-Webpages are filled with adware, noise and unnecessary parts. This app generates a short summary and detailed text, representation and stores it permanently to the Arweave 
-permaweb. 
+Webpages are filled with adware, noise and unnecessary parts.
+It is often hard not to get distracted by all the unnecessary content and get pulled into the rabbit hole of clickbait adware.
+
+Furthermore webpages are often transient and do not last a very long time.
+A publisher might delete old content to free up disk space or the company hosting might go out of business. 
+This means that all of the content that was stored in the company servers are then lost forever.
+
 
 ## Features
+This app generates a short summary and detailed text, representation and stores it permanently to the Arweave permaweb.
+
+Salient features include-
+
 ### Article Archiving
 Companies come and go, web-servers shut down, content gets deleted all the time.
-Once an article is archived it will be preserved in the permaweb forever.
+Once an article is archived with this app, it will be preserved in the permaweb forever.
 
 ### Article cleaning
-
+Removes extra fkuff from a webpage and strips it down to its main content and image.
 
 ### Article tagging
 Automatic tag extraction for better organization, management and querying
 
 ### Article summarization
-Automatically generated article summary for 
+Automatically generated article summary for the webpage content so that you can get the gist without spending too much time reading the entire article.
 
 ### Article Sentiment
 Article sentiment polarity scoring.
@@ -32,6 +47,7 @@ Tags added to permaweb include date published, author, keywords, original link f
 Most articles which are paywalled when viewed online can be accessed in full text form when parsed server-side. Thus text previews and archives can be generated even for paywalled content.
 
 ## How it works
+
 
 
 ## Technical stack
