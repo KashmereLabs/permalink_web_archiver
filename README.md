@@ -49,9 +49,23 @@ Most articles which are paywalled when viewed online can be accessed in full tex
 ## How it works
 ![Image to demonstrate the app workflow](/resources/workflow.png)
 
-
-
 ## Technical stack
+
+The technical stack contains three parts-
+### Client-
+
+The client is a ReactJS project built using Create React app.
+In the interest of preserving permanence of the app, all dependancies are included in the project as part of package json, and no external resources are being used via CDN calls.
+
+
+### Middleware server-
+
+The middleware server is an Express/NodeJS project which interacts with the Permaweb via the [Arweave JS SDK](https://github.com/ArweaveTeam/arweave-js).
+It does not use any database layer and all of the persistence is done on Permaweb.
+
+### Parser server-
+The parser uses [Newspaper3k](https://github.com/codelucas/newspaper) for article parsing and summarization and [TextBlob](https://github.com/sloria/TextBlob/) for article sentiment analysis.
+It exposes this data via a light http Flask server front-end. 
 
 
 ## Setup
