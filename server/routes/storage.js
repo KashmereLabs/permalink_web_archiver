@@ -18,6 +18,13 @@ router.get('/', function(req, res, next) {
 
 router.post('/archive', function(req, res) {
   let { linkData } = req.body;
+  if (!linkData.show_summary) {
+    delete linkData.summary
+  }
+  if (linkData.article_formatting) {
+    linkData.full_text = linkData.full_text.replace(/\n/g, "<br />");
+  }
+
   getBase64(linkData.image).then(function(imageDataResponse) {
 
     let articleImageStoreTransaction = arweave.createTransaction({
@@ -61,6 +68,8 @@ router.post('/archive', function(req, res) {
         });
       });
     });
+  }).catch(function(err){
+    res.send({"message": "failure", "error": err});
   })
 
 });

@@ -4,6 +4,15 @@ module.exports = {
   getPageHTML: function(pageData) {
 
     let sentimentText = pageData.sentiment_text.props.children;
+    let pageSummary = `<span/>`;
+    if (pageData.summary) {
+      pageSummary = `
+        <div>        
+          <div class="h4">Summary</div>
+          ${pageData.summary}
+        </div>  
+      `;
+    }
 
     return `<html>
     <head>
@@ -22,14 +31,13 @@ module.exports = {
           <img src="${pageData.image}" class="page-main-image"/>
         </div>
         <div class="page-summary-container">
-          <div class="h4">Summary</div>
-          ${decodeURI(pageData.summary)}
+          ${pageSummary}
           <div class="h4">Keywords</div>
           ${pageTags(pageData.keywords)}
         </div>
         <div class="h3">Full Text</div>
         <div class="page-full-text-container">
-          ${decodeURI(pageData.full_text)}
+          ${pageData.full_text}
         </div>
       </div>
     </body>  

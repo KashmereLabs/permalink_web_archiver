@@ -14,7 +14,8 @@ export default class Landing extends Component {
       "transactionId": "",
       recentArchives: [],
       "articleFormatting": true,
-      "showSummary": true
+      "showSummary": true,
+      "showArchiveButton": false
     };
   }
 
@@ -51,7 +52,12 @@ export default class Landing extends Component {
 
       let publish_date = moment(previewData.publish_date).format('ll');
 
-      self.setState({ "linkPreview": Object.assign({}, previewData, { sentiment_text: sentiment_text, publish_date: publish_date }), "transactionStatus": "init", "transactionId": "" });
+      self.setState({
+        "linkPreview": Object.assign({}, previewData, { sentiment_text: sentiment_text, publish_date: publish_date }),
+        "transactionStatus": "init",
+        "transactionId": "",
+        "showArchiveButton": true
+      });
     });
   }
 
@@ -60,15 +66,21 @@ export default class Landing extends Component {
   }
 
   archiveLink = () => {
-    const { linkPreview } = this.state;
-    const payload = Object.assign({}, linkPreview, { "summary": encodeURI(linkPreview.summary), "full_text": encodeURI(linkPreview.full_text) })
+    const { linkPreview, articleFormatting, showSummary } = this.state;
+    const payload = Object.assign({}, linkPreview, {
+      "summary": linkPreview.summary,
+      "full_text": linkPreview.full_text,
+      "article_formatting": articleFormatting,
+      "show_summary": showSummary
+    });
+
     const self = this;
     this.setState({ "transactionStatus": "loading" });
 
     axios.post(`${APP_SERVER_URI}/storage/archive`, { "linkData": payload }).then(function(archiveResponse) {
 
       if (archiveResponse.data.message === 'success') {
-        self.setState({ "transactionId": archiveResponse.data.id, "transactionStatus": "pending" }, function() {
+        self.setState({ "transactionId": archiveResponse.data.id, "transactionStatus": "pending", "showArchiveButton": false }, function() {
           self.startTimer();
         });
       }
@@ -109,14 +121,14 @@ export default class Landing extends Component {
   }
 
   render() {
-    const { inputURI, linkPreview, transactionStatus, transactionId, recentArchives, articleFormatting, showSummary } = this.state;
+    const { inputURI, linkPreview, transactionStatus, transactionId, recentArchives, articleFormatting, showSummary, showArchiveButton } = this.state;
     let textPreviewView = <span/>;
     if (linkPreview) {
       textPreviewView = <LinkDataPreview previewData={linkPreview} articleFormatting={articleFormatting} showSummary={showSummary}/>
     }
 
     let archiveButton = <span/>;
-    if (linkPreview) {
+    if (linkPreview && showArchiveButton) {
       archiveButton =
         <div>
         <Form.Check type="checkbox" label="Keep article formatting" checked={articleFormatting} onChange={this.articleFormattingToggle}/>
@@ -194,13 +206,13 @@ class LinkDataPreview extends Component {
         return { __html: previewData.full_text.replace(/\n/g, "<br />") };
       }
       else {
-        return { __html: previewData.full_text.replace("<br />", /\n/g) };
+        return { __html: previewData.full_text };
       }
     }
     let summaryText = <span/>;
     if (showSummary) {
-      summaryText = 
-      <div>
+      summaryText =
+        <div>
         <div className="h4">Summary</div>
         <div>{previewData.summary}</div>
       </div>
