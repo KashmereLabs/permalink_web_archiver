@@ -18,9 +18,6 @@ router.get('/', function(req, res, next) {
 
 router.post('/archive', function(req, res) {
   let { linkData } = req.body;
-
-
-
   getBase64(linkData.image).then(function(imageDataResponse) {
 
     let articleImageStoreTransaction = arweave.createTransaction({
@@ -45,7 +42,8 @@ router.post('/archive', function(req, res) {
 
           articleStoreTransaction.then(function(archiveResponse) {
             archiveResponse.addTag('Content-Type', 'text/html');
-            archiveResponse.addTag('original-link', linkData.original_link);
+            archiveResponse.addTag('post_type', 'article');
+            archiveResponse.addTag('original_link', linkData.original_link);
             archiveResponse.addTag('article_tags', JSON.stringify(linkData.keywords))
             archiveResponse.addTag('uploaded_on', uploaded_on)
             archiveResponse.addTag('sentiment_score', linkData.sentiment)
@@ -66,12 +64,31 @@ router.post('/archive', function(req, res) {
 
 router.get('/status', function(req, res) {
   const { id } = req.query;
-
   arweave.transactions.getStatus(id).then(status => {
     res.send(status);
   });
 });
 
+
+router.get('/recent_archives', function(req, res) {
+  arweave.wallets.jwkToAddress(walletJWK).then((address) => {
+    arweave.arql({
+      op: "and",
+      expr1: {
+        op: "equals",
+        expr1: "from",
+        expr2: address
+      },
+      expr2: {
+        op: "equals",
+        expr1: "post_type",
+        expr2: "article"
+      }
+    }).then(function(walletTxnResponse) {
+      res.send({ "message": "success", "data": walletTxnResponse.length > 6 ? walletTxnResponse.slice(0, 6) : walletTxnResponse });
+    });
+  });
+});
 
 function getBase64(url) {
   return axios

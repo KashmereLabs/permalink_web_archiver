@@ -28,6 +28,9 @@ Use of open graph tags for creating rich social media previews for all archived 
 ### Permaweb tags 
 Tags added to permaweb include date published, author, keywords, original link for easy retrieval and organization of the collection of articles in permaweb.
 
+### Bypass paywalls
+Most articles which are paywalled when viewed online can be accessed in full text form when parsed server-side. Thus text previews and archives can be generated even for paywalled content.
+
 ## How it works
 
 

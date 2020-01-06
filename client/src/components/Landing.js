@@ -7,7 +7,15 @@ export default class Landing extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { "inputURI": "", "transactionStatus": "init", "transactionId": "" };
+    this.state = { "inputURI": "", "transactionStatus": "init", "transactionId": "", recentArchives: [] };
+  }
+
+  componentWillMount() {
+    const self = this;
+    axios.get(`${APP_SERVER_URI}/storage/recent_archives`).then(function(dataResponse) {
+      console.log(dataResponse);
+      self.setState({ "recentArchives": dataResponse.data.data });
+    });
   }
 
   submitURLForm = (e) => {
@@ -46,9 +54,10 @@ export default class Landing extends Component {
     const { linkPreview } = this.state;
     const payload = Object.assign({}, linkPreview, { "summary": encodeURI(linkPreview.summary), "full_text": encodeURI(linkPreview.full_text) })
     const self = this;
-    console.log(payload);
+    this.setState({ "transactionStatus": "loading" });
 
     axios.post(`${APP_SERVER_URI}/storage/archive`, { "linkData": payload }).then(function(archiveResponse) {
+
       if (archiveResponse.data.message === 'success') {
         self.setState({ "transactionId": archiveResponse.data.id, "transactionStatus": "pending" }, function() {
           self.startTimer();
@@ -81,17 +90,10 @@ export default class Landing extends Component {
   }
 
   render() {
-    const { inputURI, linkPreview, transactionStatus, transactionId } = this.state;
+    const { inputURI, linkPreview, transactionStatus, transactionId, recentArchives } = this.state;
     let textPreviewView = <span/>;
     if (linkPreview) {
       textPreviewView = <LinkDataPreview previewData={linkPreview}/>
-    }
-    let currentTransactionStatus = <span/>;
-    if (transactionStatus === 'pending') {
-      currentTransactionStatus = <div><i className=""/>Transaction is pending. Once confirmed your archived webpage will be available at https://arweave.net/{transactionId}</div>
-    }
-    if (transactionStatus === 'confirmed') {
-      currentTransactionStatus = <div>Your transaction is confirmed. You can view your archived page at <a href={`https://arweave.net/${transactionId}`}>https://arweave.net/{transactionId}</a></div>
     }
 
     let archiveButton = <span/>;
@@ -116,7 +118,13 @@ export default class Landing extends Component {
       <div>Your transaction has been successfully confirmed. </div>
       <div>You can view your archived page at <a href={`https://arweave.net/${transactionId}`} target="_blank">https://arweave.net/{transactionId}</a></div>
       </Alert>
-
+    }
+    if (transactionStatus === 'loading') {
+      currentAlert = <Alert variant="info"><i className="fas fa-spinner fa-spin"/> Please wait</Alert>
+    }
+    let recentArchiveView = <span/>;
+    if (recentArchives && recentArchives.length > 0) {
+      recentArchiveView = <RecentArchives archiveData={recentArchives}/>
     }
     return (
       <Container>
@@ -136,6 +144,9 @@ export default class Landing extends Component {
           <div>
             {textPreviewView}
           </div>
+          <div>
+            {recentArchiveView}
+          </div>
         </div>
       </Container>
     )
@@ -146,7 +157,7 @@ export default class Landing extends Component {
 class LinkDataPreview extends Component {
   render() {
     const { previewData } = this.props;
-    console.log(previewData);
+
     let keywordList = <span/>;
     if (previewData.keywords) {
       keywordList = <div>{previewData.keywords.map(function(keyword, idx){
@@ -184,6 +195,20 @@ class LinkDataPreview extends Component {
         </Col>  
         </Row>
       </div>
+    )
+  }
+}
+
+
+class RecentArchives extends Component {
+  render() {
+    const { archiveData } = this.props;
+    let archiveList = archiveData.map((txId) => (<div><a href={`https://arweave.net/${txId}`}>Link</a></div>))
+    return (
+      <div>
+        {archiveList}      
+      </div>
+
     )
   }
 }

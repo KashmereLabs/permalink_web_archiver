@@ -11,17 +11,11 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-
-
 router.post('/extract', function(req, res) {
   const { url } = req.body;
-
-
   axios.get(`${PARSER_SERVER_URI}/fetch?url=${url}`).then(function(dataResponse) {
-    
     let responsePayload = dataResponse.data;
     responsePayload.original_link = url;
-    
     res.send({ "message": "success", "data": responsePayload });
   });
 
