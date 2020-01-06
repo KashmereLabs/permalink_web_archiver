@@ -94,10 +94,11 @@ npm start
 ```
 
 The parser contains libraries and methods for parsing and analyzing the webpage data
+Please install python3 on your system. Newspaper3k requires python3.
 It is recommnded to run the parser in a virtualenv environment.
 
 ```
-pip install
+sudo pip3 install -r requirements.txt
 env FLASK_APP=main.py flask run
 ```
 
