@@ -47,6 +47,7 @@ Tags added to permaweb include date published, author, keywords, original link f
 Most articles which are paywalled when viewed online can be accessed in full text form when parsed server-side. Thus text previews and archives can be generated even for paywalled content.
 
 ## How it works
+![Image to demonstrate the app workflow](/resources/workflow.png)
 
 
 
