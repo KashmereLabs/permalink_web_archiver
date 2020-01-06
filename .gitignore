@@ -4,3 +4,4 @@ server/node_modules
 parser/venv
 parser/__pycache__
 server/wallet.json
+client/.env.local
