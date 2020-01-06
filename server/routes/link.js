@@ -16,6 +16,7 @@ router.post('/extract', function(req, res) {
   axios.get(`${PARSER_SERVER_URI}/fetch?url=${url}`).then(function(dataResponse) {
     let responsePayload = dataResponse.data;
     responsePayload.original_link = url;
+    responsePayload.full_text = responsePayload.full_text;
     res.send({ "message": "success", "data": responsePayload });
   });
 

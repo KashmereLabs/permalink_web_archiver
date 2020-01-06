@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import { Form, Button, Container, Row, Col, Badge, Alert } from 'react-bootstrap';
 import axios from 'axios';
-import LinkPreview from 'link-preview-js';
+import moment from 'moment'
 const APP_SERVER_URI = process.env.REACT_APP_API_URI;
 
 export default class Landing extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { "inputURI": "", "transactionStatus": "init", "transactionId": "", recentArchives: [] };
+    this.state = {
+      "inputURI": "",
+      "transactionStatus": "init",
+      "transactionId": "",
+      recentArchives: [],
+      "articleFormatting": true,
+      "showSummary": true
+    };
   }
 
   componentWillMount() {
@@ -42,7 +49,9 @@ export default class Landing extends Component {
         sentiment_text = <span>&#9785; very negative</span>;
       }
 
-      self.setState({ "linkPreview": Object.assign({}, previewData, { sentiment_text: sentiment_text }), "transactionStatus": "init", "transactionId": "" });
+      let publish_date = moment(previewData.publish_date).format('ll');
+
+      self.setState({ "linkPreview": Object.assign({}, previewData, { sentiment_text: sentiment_text, publish_date: publish_date }), "transactionStatus": "init", "transactionId": "" });
     });
   }
 
@@ -82,23 +91,38 @@ export default class Landing extends Component {
   stopTimer = () => {
     clearInterval(this.timer);
     this.setState({ transactionStatus: "confirmed" });
-
   }
 
   componentWillUnmount() {
     clearInterval(this.timer);
   }
 
+  articleFormattingToggle = () => {
+    let newCheckVal = !this.state.articleFormatting;
+    this.setState({ articleFormatting: newCheckVal });
+  }
+
+  showSummaryToggle = () => {
+    let newCheckVal = !this.state.showSummary;
+    this.setState({ showSummary: newCheckVal });
+
+  }
+
   render() {
-    const { inputURI, linkPreview, transactionStatus, transactionId, recentArchives } = this.state;
+    const { inputURI, linkPreview, transactionStatus, transactionId, recentArchives, articleFormatting, showSummary } = this.state;
     let textPreviewView = <span/>;
     if (linkPreview) {
-      textPreviewView = <LinkDataPreview previewData={linkPreview}/>
+      textPreviewView = <LinkDataPreview previewData={linkPreview} articleFormatting={articleFormatting} showSummary={showSummary}/>
     }
 
     let archiveButton = <span/>;
     if (linkPreview) {
-      archiveButton = <Button onClick={this.archiveLink} className="app-button">Archive Link</Button>;
+      archiveButton =
+        <div>
+        <Form.Check type="checkbox" label="Keep article formatting" checked={articleFormatting} onChange={this.articleFormattingToggle}/>
+        <Form.Check type="checkbox" label="Show Article summary" checked={showSummary} onChange={this.showSummaryToggle}/>
+        <Button onClick={this.archiveLink} className="app-button">Archive Link</Button>
+      </div>
     }
 
     let currentAlert = <Alert  variant="info" className="app-alert-bar">
@@ -135,12 +159,12 @@ export default class Landing extends Component {
               <Form.Control type="text" placeholder="Paste the URL you want to archive" value={inputURI} onChange={this.inputURIChanged}/>
             </Form.Group>
             <Button variant="secondary" type="submit" className="app-button">Preview</Button>
-            {archiveButton}
           </Form>
           </div>
           <div>
           {currentAlert}
           </div>
+          {archiveButton}
           <div>
             {textPreviewView}
           </div>
@@ -156,7 +180,7 @@ export default class Landing extends Component {
 
 class LinkDataPreview extends Component {
   render() {
-    const { previewData } = this.props;
+    const { previewData, showSummary, articleFormatting } = this.props;
 
     let keywordList = <span/>;
     if (previewData.keywords) {
@@ -166,9 +190,21 @@ class LinkDataPreview extends Component {
     }
 
     function createMarkup() {
-      return { __html: previewData.full_text };
+      if (articleFormatting) {
+        return { __html: previewData.full_text.replace(/\n/g, "<br />") };
+      }
+      else {
+        return { __html: previewData.full_text.replace("<br />", /\n/g) };
+      }
     }
-
+    let summaryText = <span/>;
+    if (showSummary) {
+      summaryText = 
+      <div>
+        <div className="h4">Summary</div>
+        <div>{previewData.summary}</div>
+      </div>
+    }
     return (
       <div>
         <h3>{previewData.title}</h3>
@@ -180,8 +216,7 @@ class LinkDataPreview extends Component {
         <Row>
           <Col lg={6}><img src={previewData.image} className="preview-image-class"/></Col>
           <Col lg={6}>
-            <div className="h4">Summary</div>
-            <div>{previewData.summary}</div>
+            {summaryText}
             <div className="h4">Tags</div>
             {keywordList}
           </Col>
@@ -206,7 +241,7 @@ class RecentArchives extends Component {
     let archiveList = archiveData.map((item, idx) => (<ArchiveCard key={idx} data={item}/>))
     return (
       <div>
-        <div className="h3 container-heading">Recently archived links</div>
+        <div className="h4 container-heading">Recently archived links</div>
         {archiveList}      
       </div>
     )
@@ -215,17 +250,25 @@ class RecentArchives extends Component {
 
 
 class ArchiveCard extends Component {
+  openCardURL = () => {
+    const { data } = this.props;
+    var win = window.open(data.link, '_blank');
+    win.focus();
+  }
   render() {
     const { data } = this.props;
-    console.log(data);
     let keywordList = [];
     if (data.keywords) {
       keywordList = JSON.parse(data.keywords);
     }
+    if (keywordList.length > 12) {
+      keywordList = keywordList.slice(0, 12);
+    }
+    let cardTitle = data.title.length < 70 ? data.title : data.title.substring(0, 70) + "...";
 
     let tagList = keywordList.map((key, idx) => (<Badge pill variant="light" key={`${key}-${idx}`}>{key}</Badge>));
     return (
-      <div className="preview-card-container">
+      <div className="preview-card-container" onClick={this.openCardURL}>
         <Row>
           <Col lg={4}>
             <div className="preview-card-image-container">
@@ -233,7 +276,7 @@ class ArchiveCard extends Component {
             </div>
           </Col>
           <Col lg={8}>
-            <div className="h4 card-title">{data.title}</div>
+            <div className="h5 card-title">{cardTitle}</div>
             <div className="preview-card-meta-container">
               <div className="preview-card-meta-label">Author</div>
               <div className="preview-card-meta-value">{data.author}</div>

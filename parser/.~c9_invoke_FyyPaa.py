@@ -20,8 +20,10 @@ def fetch_data():
   article.download()
   article.parse()
   article.nlp()
+
+
   # Get sentiment from article title and summary
-  sentiment_blob = TextBlob(article.title +". "+article.summary)
+  sentiment_blob = TextBlob(article.title +". "+article.text)
 
   return {"summary": article.summary, "title": article.title, "image": article.top_image,
           "keywords": article.keywords, "full_text": article.text, "publish_date": article.publish_date,

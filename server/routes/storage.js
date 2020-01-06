@@ -96,7 +96,6 @@ router.get('/recent_archives', function(req, res) {
       Promise.all(txData).then(function(txDataResponse) {
 
         let transactionTagList = txDataResponse.map(function(item) {
-
           let tagList = item.get('tags').map(function(tag) {
             let tagObject = {};
             tagObject[tag.get('name', { decode: true, string: true })] = tag.get('value', { decode: true, string: true });
@@ -108,7 +107,7 @@ router.get('/recent_archives', function(req, res) {
             let value = di[key];
             tagObject[key] = value;
           });
-
+          tagObject['link'] = `https://arweave.net/${item.id}`;
           return tagObject;
         });
 
