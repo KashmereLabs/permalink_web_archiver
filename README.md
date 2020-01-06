@@ -39,25 +39,34 @@ Most articles which are paywalled when viewed online can be accessed in full tex
 
 ## Setup
 The app contains 3 parts all of which needs to be setup individually.
-Download the arweave wallet json and place it in project root in a file called wallet.json
+
+Download the arweave wallet json and place it in project root in a file called *wallet.json*
+
 Note: The wallet json contains your private keys so do not expose it to the world or put it in any of your repos.
 
 Client runs a ReactJS stack, in order to run the client project.
-> cd client
-> sudo npm install
-> npm start
+
+```
+ cd client
+ sudo npm install
+ npm start
+```
+
 The env file assumes that the local server is running on port 8000
 
 The server is a NodeJS project
-> cd server
-> sudo npm install
-> npm start
+
+```
+cd server
+sudo npm install
+npm start
+```
 
 The parser contains libraries and methods for parsing and analyzing the webpage data
 It is recommnded to run the parser in a virtualenv environment.
-> pip install
-> env FLASK_APP=main.py flask run
 
+```
+pip install
+env FLASK_APP=main.py flask run
+```
 
-
-## Coming Soon
