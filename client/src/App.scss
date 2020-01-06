@@ -128,8 +128,24 @@
   }
 }
 
+@media only screen and (max-width: 600px) {
+  .preview-card-container {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
 .container-heading {
   text-align: center;
   margin-bottom: 40px;
   margin-top: 40px;
+}
+
+.archive-button-container {
+  margin-bottom: 20px;
+  .archive-button {
+    margin-top: -6px;
+    background: #2a74e5;
+    border-color: #2a74e5;
+  }
 }

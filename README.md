@@ -28,6 +28,9 @@ Once an article is archived with this app, it will be preserved in the permaweb 
 ### Article cleaning
 Removes extra fkuff from a webpage and strips it down to its main content and image.
 
+### Archiving options
+While archiving a webpage, the user may choose whether or not to archive the page summary along with the webpage content and whether or not they want to keep tht original article formatting.
+
 ### Article tagging
 Automatic tag extraction for better organization, management and querying
 

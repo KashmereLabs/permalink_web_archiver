@@ -130,10 +130,10 @@ export default class Landing extends Component {
     let archiveButton = <span/>;
     if (linkPreview && showArchiveButton) {
       archiveButton =
-        <div>
+        <div className="archive-button-container">
         <Form.Check type="checkbox" label="Keep article formatting" checked={articleFormatting} onChange={this.articleFormattingToggle}/>
         <Form.Check type="checkbox" label="Show Article summary" checked={showSummary} onChange={this.showSummaryToggle}/>
-        <Button onClick={this.archiveLink} className="app-button">Archive Link</Button>
+        <Button onClick={this.archiveLink} className="app-button archive-button">Archive Link</Button>
       </div>
     }
 
