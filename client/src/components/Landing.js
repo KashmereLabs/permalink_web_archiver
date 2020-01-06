@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Button, Container, Row, Col, Badge, Alert } from 'react-bootstrap';
 import axios from 'axios';
+import LinkPreview from 'link-preview-js';
 const APP_SERVER_URI = process.env.REACT_APP_API_URI;
 
 export default class Landing extends Component {
@@ -13,7 +14,6 @@ export default class Landing extends Component {
   componentWillMount() {
     const self = this;
     axios.get(`${APP_SERVER_URI}/storage/recent_archives`).then(function(dataResponse) {
-      console.log(dataResponse);
       self.setState({ "recentArchives": dataResponse.data.data });
     });
   }
@@ -203,12 +203,48 @@ class LinkDataPreview extends Component {
 class RecentArchives extends Component {
   render() {
     const { archiveData } = this.props;
-    let archiveList = archiveData.map((txId) => (<div><a href={`https://arweave.net/${txId}`}>Link</a></div>))
+    let archiveList = archiveData.map((item, idx) => (<ArchiveCard key={idx} data={item}/>))
     return (
       <div>
+        <div className="h3 container-heading">Recently archived links</div>
         {archiveList}      
       </div>
+    )
+  }
+}
 
+
+class ArchiveCard extends Component {
+  render() {
+    const { data } = this.props;
+    console.log(data.keywords);
+    let keywordList = [];
+    if (data.keywords) {
+      keywordList = JSON.parse(data.keywords);
+    }
+
+    let tagList = keywordList.map((key, idx) => (<Badge pill variant="light" key={`${key}-${idx}`}>{key}</Badge>));
+    return (
+      <div className="preview-card-container">
+        <Row>
+          <Col lg={4}>
+            <div className="preview-card-image-container">
+              <img src={data.image} className="preview-card-image"/>
+            </div>
+          </Col>
+          <Col lg={8}>
+            <div className="h4 card-title">{data.title}</div>
+            <div className="preview-card-meta-container">
+              <div className="preview-card-meta-label">Author</div>
+              <div className="preview-card-meta-value">{data.author}</div>
+              <div className="preview-card-meta-label">Original published on</div>
+              <div className="preview-card-meta-value">{data.published_on}</div>
+            </div>
+            <div>{tagList}</div>
+          </Col>
+        </Row>
+
+      </div>
     )
   }
 }

@@ -43,12 +43,15 @@ router.post('/archive', function(req, res) {
           articleStoreTransaction.then(function(archiveResponse) {
             archiveResponse.addTag('Content-Type', 'text/html');
             archiveResponse.addTag('post_type', 'article');
+            archiveResponse.addTag('title', linkData.title);
+            archiveResponse.addTag('image', imageURI);
+            archiveResponse.addTag('keywords', JSON.stringify(linkData.keywords));
             archiveResponse.addTag('original_link', linkData.original_link);
-            archiveResponse.addTag('article_tags', JSON.stringify(linkData.keywords))
-            archiveResponse.addTag('uploaded_on', uploaded_on)
+            archiveResponse.addTag('uploaded_on', uploaded_on);
+            archiveResponse.addTag('author', linkData.authors);
+            archiveResponse.addTag('published_on', linkData.publish_date);
             archiveResponse.addTag('sentiment_score', linkData.sentiment)
             arweave.transactions.sign(archiveResponse, walletJWK).then(function(signedTransactionResponse) {
-
               arweave.transactions.post(archiveResponse).then(function(postResponse) {
                 const transactionMeta = JSON.parse(postResponse.config.data);
                 res.send({ "message": "success", "id": transactionMeta.id });
@@ -85,7 +88,34 @@ router.get('/recent_archives', function(req, res) {
         expr2: "article"
       }
     }).then(function(walletTxnResponse) {
-      res.send({ "message": "success", "data": walletTxnResponse.length > 6 ? walletTxnResponse.slice(0, 6) : walletTxnResponse });
+
+      let transactionList = walletTxnResponse.length > 6 ? walletTxnResponse.slice(0, 6) : walletTxnResponse;
+      let txData = transactionList.map(function(item) {
+        return arweave.transactions.get(item);
+      })
+      Promise.all(txData).then(function(txDataResponse) {
+
+        let transactionTagList = txDataResponse.map(function(item) {
+
+          let tagList = item.get('tags').map(function(tag) {
+            let tagObject = {};
+            tagObject[tag.get('name', { decode: true, string: true })] = tag.get('value', { decode: true, string: true });
+            return tagObject;
+          });
+          let tagObject = {};
+          tagList.forEach(function(di) {
+            let key = Object.keys(di)[0];
+            let value = di[key];
+            tagObject[key] = value;
+          });
+
+          return tagObject;
+        });
+
+        res.send({ "message": "success", "data": transactionTagList });
+
+      });
+
     });
   });
 });
