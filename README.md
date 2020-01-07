@@ -7,6 +7,8 @@ This project is meant to generate readable content artifacts and enable web cont
 
 Please use it judiciously and do not upload copyrighted content from the web.
 
+You can visit the live deployment [here](http://permalink-archiver.s3-website-us-west-2.amazonaws.com/)
+
 ## Motivation
 Webpages are filled with adware, noise and unnecessary parts.
 It is often hard not to get distracted by all the unnecessary content and get pulled into the rabbit hole of clickbait adware.
