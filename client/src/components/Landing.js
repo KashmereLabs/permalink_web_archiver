@@ -145,8 +145,16 @@ export default class Landing extends Component {
     }
     if (linkPreview && transactionStatus === 'pending') {
       currentAlert = <Alert variant="info">
-      <div><i className="fas fa-spinner fa-spin"/> Your transaction has been broadcast and is currently pending.</div>
-      <div>When confirmed the archived file will be available at <a href={`https://arweave.net/${transactionId}`} target="_blank">https://arweave.net/{transactionId}</a></div>
+      
+      <div className="lds-dual-ring"></div>
+      <div className="loading-preview-text">
+        Your transaction has been broadcast and is currently pending.
+        <div>
+        When confirmed the archived file will be available at 
+          <a href={`https://arweave.net/${transactionId}`}
+              target="_blank">https://arweave.net/{transactionId}</a>
+        </div>
+      </div>
       </Alert>
     }
     if (linkPreview && transactionStatus === 'confirmed') {
@@ -156,7 +164,10 @@ export default class Landing extends Component {
       </Alert>
     }
     if (transactionStatus === 'loading') {
-      currentAlert = <Alert variant="info"><i className="fas fa-spinner fa-spin"/> Please wait</Alert>
+      currentAlert = <Alert variant="info">
+        <div className="lds-dual-ring"></div>
+        <div className="loading-preview-text">Please wait</div>
+      </Alert>
     }
     let recentArchiveView = <span/>;
     if (recentArchives && recentArchives.length > 0) {
@@ -217,6 +228,14 @@ class LinkDataPreview extends Component {
         <div>{previewData.summary}</div>
       </div>
     }
+
+    let currentImage = "";
+    if (previewData.image) {
+      currentImage = previewData.image;
+    }
+    else {
+      currentImage = "https://loremflickr.com/640/360";
+    }
     return (
       <div>
         <h3>{previewData.title}</h3>
@@ -226,7 +245,7 @@ class LinkDataPreview extends Component {
           <div className="article-subheading-label">Sentiment</div><div className="article-subheading-text">{previewData.sentiment_text}</div> 
         </div>
         <Row>
-          <Col lg={6}><img src={previewData.image} className="preview-image-class"/></Col>
+          <Col lg={6}><img src={currentImage} className="preview-image-class"/></Col>
           <Col lg={6}>
             {summaryText}
             <div className="h4">Tags</div>

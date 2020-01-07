@@ -2,7 +2,6 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '@fortawesome/fontawesome-free/css/all.css';
 import Landing from './components/Landing';
 import TopNav from './components/TopNav';
 
