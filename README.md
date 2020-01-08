@@ -7,7 +7,7 @@ This project is meant to generate readable content artifacts and enable web cont
 
 Please use it judiciously and do not upload copyrighted content from the web.
 
-You can visit the live deployment [here](http://permalink-archiver.s3-website-us-west-2.amazonaws.com/)
+You can visit the live deployment [here](https://arweave.net/hh5Jst5Nh92rlvnvHaAnfKLul7d-K4ytKEKhHkzia8E)
 
 ## Motivation
 Webpages are filled with adware, noise and unnecessary parts.
