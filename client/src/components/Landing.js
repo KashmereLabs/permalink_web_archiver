@@ -139,18 +139,17 @@ export default class Landing extends Component {
 
     let currentAlert = <Alert  variant="info" className="app-alert-bar">
                          Please make sure that you do not archive links with copyrighted content or images.
-                      </Alert>;
+                       </Alert>;
     if (linkPreview && transactionStatus === 'init') {
       currentAlert = <Alert variant="primary" className="app-alert-bar">Your document is now ready to be archived</Alert>
     }
     if (linkPreview && transactionStatus === 'pending') {
       currentAlert = <Alert variant="info">
-      
       <div className="lds-dual-ring"></div>
       <div className="loading-preview-text">
         Your transaction has been broadcast and is currently pending.
         <div>
-        When confirmed the archived file will be available at 
+        When confirmed the archived file will be available at&nbsp; 
           <a href={`https://arweave.net/${transactionId}`}
               target="_blank">https://arweave.net/{transactionId}</a>
         </div>
@@ -169,7 +168,7 @@ export default class Landing extends Component {
         <div className="loading-preview-text">Please wait</div>
       </Alert>
     }
-    let recentArchiveView = <span/>;
+    let recentArchiveView = <div className="recent-archives-loading-container"><div className="lds-dual-ring"></div></div>;
     if (recentArchives && recentArchives.length > 0) {
       recentArchiveView = <RecentArchives archiveData={recentArchives}/>
     }

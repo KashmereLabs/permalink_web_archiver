@@ -181,3 +181,18 @@
   display:inline-block;
   margin-left: 40px;
 }
+
+.recent-archives-loading-container {
+  margin-top: 40px;
+  text-align: center;
+  .lds-dual-ring {
+    margin: auto;
+    width: 80px;
+    height: 80px;    
+  }
+  .lds-dual-ring:after {
+    width: 64px;
+    height: 64px;
+    border-color: #d3d3d3 transparent #d3d3d3 transparent;
+  }
+}
